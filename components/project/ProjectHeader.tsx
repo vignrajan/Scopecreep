@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { CopyButton } from "@/components/copy-button";
+import { ProjectSettings } from "@/components/project/ProjectSettings";
 import { cn, appUrl } from "@/lib/utils";
 import type { Project } from "@/types";
 import { ArrowLeft } from "lucide-react";
@@ -40,7 +41,10 @@ export function ProjectHeader({
             {project.client_email ? ` · ${project.client_email}` : ""}
           </p>
         </div>
-        <CopyButton value={appUrl(`/client/${project.public_token}`)} label="Share client link" />
+        <div className="flex items-center gap-2">
+          <ProjectSettings project={project} />
+          <CopyButton value={appUrl(`/client/${project.public_token}`)} label="Share client link" />
+        </div>
       </div>
 
       <nav className="flex gap-1 border-b">

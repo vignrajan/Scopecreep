@@ -32,7 +32,7 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { emailRedirectTo: appUrl("/onboarding") },
+    options: { emailRedirectTo: appUrl("/auth/callback?next=/onboarding") },
   });
   if (error) return { error: error.message };
 
@@ -48,10 +48,39 @@ export async function sendMagicLink(_prev: AuthState, formData: FormData): Promi
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: appUrl("/dashboard") },
+    options: { emailRedirectTo: appUrl("/auth/callback?next=/dashboard") },
   });
   if (error) return { error: error.message };
   return { message: "Magic link sent — check your inbox." };
+}
+
+export async function resetPassword(_prev: AuthState, formData: FormData): Promise<AuthState> {
+  const email = String(formData.get("email") ?? "").trim();
+  if (!email) return { error: "Enter your email." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: appUrl("/auth/callback?next=/auth/update-password"),
+  });
+  if (error) return { error: error.message };
+  // Always report success to avoid leaking which emails are registered.
+  return { message: "If that email has an account, a reset link is on its way." };
+}
+
+export async function updatePassword(_prev: AuthState, formData: FormData): Promise<AuthState> {
+  const password = String(formData.get("password") ?? "");
+  if (password.length < 6) return { error: "Password must be at least 6 characters." };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Your reset link has expired. Request a new one." };
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { error: error.message };
+
+  redirect("/dashboard");
 }
 
 export async function signOut() {

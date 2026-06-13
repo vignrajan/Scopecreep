@@ -505,9 +505,11 @@ export default async function HomePage() {
             </span>
             ScopeLock
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-5">
             <a href="#features" className="transition-colors hover:text-foreground">Features</a>
             <a href="#pricing" className="transition-colors hover:text-foreground">Pricing</a>
+            <Link href="/privacy" className="transition-colors hover:text-foreground">Privacy</Link>
+            <Link href="/terms" className="transition-colors hover:text-foreground">Terms</Link>
             <Link href="/login" className="transition-colors hover:text-foreground">Sign in</Link>
           </div>
           <div>© {new Date().getFullYear()} ScopeLock</div>
