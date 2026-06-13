@@ -5,23 +5,25 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --foreground: 175 54% 19%; /* deep teal ink #134E4A */
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --primary: 239 84% 67%; /* Indigo #6366f1 */
+    --card-foreground: 175 54% 19%;
+    --primary: 174 84% 32%; /* teal #0D9488 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
+    --cta: 25 95% 53%; /* action orange #F97316 */
+    --cta-foreground: 0 0% 100%;
+    --secondary: 166 60% 95%;
+    --secondary-foreground: 175 54% 19%;
+    --muted: 166 40% 96%;
+    --muted-foreground: 175 18% 42%;
+    --accent: 166 60% 95%;
+    --accent-foreground: 175 54% 19%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 239 84% 67%;
-    --radius: 0.65rem;
+    --border: 168 28% 88%;
+    --input: 168 28% 88%;
+    --ring: 174 84% 32%;
+    --radius: 0.75rem;
   }
 }
 
@@ -32,5 +34,34 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Respect users who prefer reduced motion (UX checklist). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  /* Subtle entrance used on the marketing page. */
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-up {
+    animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 }
