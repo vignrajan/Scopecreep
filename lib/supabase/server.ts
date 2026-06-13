@@ -33,3 +33,27 @@ export async function createClient() {
     },
   );
 }
+
+/**
+ * Returns the current user, or null if unauthenticated OR if Supabase is
+ * misconfigured/unreachable. Never throws — use on public pages so a missing
+ * env var or transient error can't produce an opaque server exception.
+ */
+export async function getOptionalUser() {
+  try {
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
+      return null;
+    }
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user;
+  } catch (err) {
+    console.error("[getOptionalUser] failed:", err);
+    return null;
+  }
+}
