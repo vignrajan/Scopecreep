@@ -1,14 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getOptionalUser } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Sparkles, FileSignature } from "lucide-react";
 
 export default async function HomePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getOptionalUser();
   if (user) redirect("/dashboard");
 
   return (
