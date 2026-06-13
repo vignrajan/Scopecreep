@@ -52,8 +52,7 @@ export async function analyzeScopeRequest(
     ],
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const response = await getClient().messages.create(params as any);
+  const response = await getClient().messages.create(params as never);
 
   const textBlock = response.content.find((b: { type: string }) => b.type === "text") as
     | { type: "text"; text: string }
