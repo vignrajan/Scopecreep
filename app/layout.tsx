@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body className={`${jakarta.className} min-h-screen antialiased`}>
         <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );

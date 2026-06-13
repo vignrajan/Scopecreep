@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { track } from "@vercel/analytics";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,6 +38,7 @@ export function RequestInput({ projectId }: { projectId: string }) {
         });
         const data = await res.json();
         if (res.ok) {
+          track("analysis_completed", { verdict: data?.verdict ?? "unknown" });
           toast.success("Analyzed");
         } else if (res.status === 429) {
           toast.error(data.error ?? "Rate limit reached.");
