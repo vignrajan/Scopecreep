@@ -89,6 +89,42 @@ export async function updateClientUpdate(
   return { ok: true };
 }
 
+export async function updateProject(
+  projectId: string,
+  formData: FormData,
+): Promise<ActionResult> {
+  const { supabase } = await requireUser();
+
+  const name = String(formData.get("name") ?? "").trim();
+  const original_scope = String(formData.get("original_scope") ?? "").trim();
+  if (!name || !original_scope) {
+    return { error: "Project name and original scope are required." };
+  }
+
+  const { error } = await supabase
+    .from("projects")
+    .update({
+      name,
+      client_name: String(formData.get("client_name") ?? "").trim() || null,
+      client_email: String(formData.get("client_email") ?? "").trim() || null,
+      original_scope,
+    })
+    .eq("id", projectId);
+
+  if (error) return { error: error.message };
+  revalidatePath(`/project/${projectId}`);
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
+
+export async function deleteProject(projectId: string): Promise<ActionResult> {
+  const { supabase } = await requireUser();
+  const { error } = await supabase.from("projects").delete().eq("id", projectId);
+  if (error) return { error: error.message };
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
+}
+
 export async function setProjectStatus(
   projectId: string,
   status: "active" | "completed" | "archived",

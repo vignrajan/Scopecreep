@@ -2,6 +2,7 @@ import crypto from "crypto";
 import {
   lemonSqueezySetup,
   createCheckout,
+  getSubscription,
 } from "@lemonsqueezy/lemonsqueezy.js";
 import { appUrl } from "@/lib/utils";
 
@@ -40,6 +41,20 @@ export async function createCheckoutUrl(params: {
     throw new Error(error?.message ?? "Failed to create checkout");
   }
   return data.data.attributes.url;
+}
+
+/**
+ * Returns the Lemon Squeezy customer-portal URL for a subscription, where the
+ * user can update their card or cancel. Null if unavailable.
+ */
+export async function getCustomerPortalUrl(
+  subscriptionId: string,
+): Promise<string | null> {
+  ensureConfigured();
+  const { data, error } = await getSubscription(subscriptionId);
+  if (error || !data) return null;
+  const urls = data.data.attributes.urls;
+  return urls?.customer_portal ?? urls?.update_payment_method ?? null;
 }
 
 /**

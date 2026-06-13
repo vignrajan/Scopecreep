@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export interface SettingsResult {
   error?: string;
@@ -32,4 +33,23 @@ export async function updateProfile(formData: FormData): Promise<SettingsResult>
   revalidatePath("/dashboard/settings");
   revalidatePath("/dashboard");
   return { ok: true };
+}
+
+/**
+ * Permanently delete the account and all data. Deleting the auth user cascades
+ * to public.users → projects → scope_requests/change_orders via FK constraints.
+ */
+export async function deleteAccount(): Promise<SettingsResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const svc = createServiceClient();
+  const { error } = await svc.auth.admin.deleteUser(user.id);
+  if (error) return { error: error.message };
+
+  await supabase.auth.signOut();
+  redirect("/");
 }

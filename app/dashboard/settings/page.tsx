@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SettingsForm } from "./settings-form";
+import { DangerZone } from "./danger-zone";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -36,6 +37,8 @@ export default async function SettingsPage() {
           />
         </CardContent>
       </Card>
+
+      <DangerZone />
     </div>
   );
 }
