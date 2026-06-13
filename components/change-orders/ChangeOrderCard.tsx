@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { track } from "@vercel/analytics";
 import { Send, Pencil, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,7 @@ export function ChangeOrderCard({
           toast.error(data.error ?? "Could not send.");
           return;
         }
+        track("change_order_sent");
         toast.success(data.emailSent ? "Sent to client" : "Marked sent (email delivery failed)");
         router.refresh();
       } catch {

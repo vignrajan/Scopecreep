@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { track } from "@vercel/analytics";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +15,7 @@ export function PlanCards({ currentPlan }: { currentPlan: Plan }) {
   const [pending, startTransition] = useTransition();
 
   function upgrade(plan: Plan) {
+    track("checkout_started", { plan });
     startTransition(async () => {
       try {
         const res = await fetch("/api/checkout", {
