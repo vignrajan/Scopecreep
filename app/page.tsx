@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getOptionalUser } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
+import { DemoAnalyzer } from "@/components/demo/DemoAnalyzer";
 import {
   Sparkles,
   FileSignature,
@@ -123,6 +124,7 @@ export default async function HomePage() {
             <span className="text-lg">ScopeLock</span>
           </Link>
           <nav className="hidden items-center gap-7 text-sm font-medium text-muted-foreground md:flex">
+            <a href="#demo" className="transition-colors duration-200 hover:text-foreground">Live demo</a>
             <a href="#how" className="transition-colors duration-200 hover:text-foreground">How it works</a>
             <a href="#features" className="transition-colors duration-200 hover:text-foreground">Features</a>
             <a href="#compare" className="transition-colors duration-200 hover:text-foreground">Compare</a>
@@ -235,6 +237,25 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Live demo ─────────────────────────────────────── */}
+      <section id="demo" className="scroll-mt-20 border-t border-border">
+        <div className="mx-auto max-w-2xl px-5 py-16 md:px-8 md:py-24">
+          <div className="mx-auto mb-8 max-w-xl text-center">
+            <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+              <Sparkles className="h-4 w-4" /> Try it now — no signup
+            </span>
+            <h2 className="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">
+              See a real verdict in 3 seconds
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Here&apos;s a sample project scope. Pick a client message and watch ScopeLock price
+              it — exactly what you&apos;ll do with your own work.
+            </p>
+          </div>
+          <DemoAnalyzer variant="landing" />
         </div>
       </section>
 
