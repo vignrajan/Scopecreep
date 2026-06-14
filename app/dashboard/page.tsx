@@ -4,10 +4,11 @@ import { createClient } from "@/lib/supabase/server";
 import { StatsBar } from "@/components/dashboard/StatsBar";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { NewProjectButton } from "@/components/project/NewProjectButton";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { planConfig } from "@/lib/plans";
 import type { Plan, Project } from "@/types";
-import { FolderPlus } from "lucide-react";
+import { FolderPlus, Download } from "lucide-react";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -59,7 +60,16 @@ export default async function DashboardPage() {
             {cap !== null ? ` · ${activeCount}/${cap} active` : ""}
           </p>
         </div>
-        <NewProjectButton canCreate={canCreate} />
+        <div className="flex items-center gap-2">
+          {totalExtraHours > 0 && (
+            <Button asChild variant="outline" className="cursor-pointer">
+              <a href="/api/export/change-orders" download>
+                <Download className="h-4 w-4" /> Export CSV
+              </a>
+            </Button>
+          )}
+          <NewProjectButton canCreate={canCreate} />
+        </div>
       </div>
 
       <StatsBar

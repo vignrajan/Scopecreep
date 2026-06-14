@@ -58,6 +58,7 @@ create table if not exists public.change_orders (
   id uuid primary key default gen_random_uuid(),
   project_id uuid not null references public.projects (id) on delete cascade,
   request_id uuid references public.scope_requests (id) on delete set null,
+  co_number integer, -- per-project sequential number (CO #1, #2…); set by trigger
   title text not null,
   description text not null,
   hours numeric not null,
@@ -72,6 +73,33 @@ create table if not exists public.change_orders (
 );
 create index if not exists change_orders_project_id_idx on public.change_orders (project_id);
 create index if not exists change_orders_sign_token_idx on public.change_orders (sign_token);
+
+-- ============================================================
+-- Trigger: assign a per-project sequential change-order number
+-- (CO #1, #2, …) on insert. SECURITY DEFINER so the max() lookup
+-- isn't constrained by RLS during the insert.
+-- ============================================================
+create or replace function public.set_change_order_number()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if new.co_number is null then
+    select coalesce(max(co_number), 0) + 1
+      into new.co_number
+      from public.change_orders
+      where project_id = new.project_id;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists change_orders_set_number on public.change_orders;
+create trigger change_orders_set_number
+  before insert on public.change_orders
+  for each row execute function public.set_change_order_number();
 
 -- ============================================================
 -- Trigger: create a public.users row when an auth user signs up

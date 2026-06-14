@@ -19,7 +19,7 @@ export default async function SignPage({
   const { data: order } = await svc
     .from("change_orders")
     .select(
-      "id, title, description, hours, rate, total, status, client_signed_at, sign_token, project_id, projects(name, user_id)",
+      "id, co_number, title, description, hours, rate, total, status, client_signed_at, sign_token, project_id, projects(name, user_id)",
     )
     .eq("sign_token", sign_token)
     .single();
@@ -46,6 +46,7 @@ export default async function SignPage({
           <ChangeOrderPreview
             projectName={o.projects.name}
             freelancerName={freelancerName}
+            number={o.co_number}
             title={o.title}
             description={o.description}
             hours={Number(o.hours)}

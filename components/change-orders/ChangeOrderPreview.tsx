@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/utils";
 export function ChangeOrderPreview({
   projectName,
   freelancerName,
+  number,
   title,
   description,
   hours,
@@ -14,6 +15,7 @@ export function ChangeOrderPreview({
 }: {
   projectName: string;
   freelancerName?: string;
+  number?: number | null;
   title: string;
   description: string;
   hours: number;
@@ -25,7 +27,7 @@ export function ChangeOrderPreview({
     <div className="space-y-5">
       <div>
         <div className="text-xs uppercase tracking-wide text-muted-foreground">
-          Change order · {projectName}
+          {number ? `Change order #${number}` : "Change order"} · {projectName}
         </div>
         <h2 className="mt-1 text-xl font-semibold">{title}</h2>
         {freelancerName && (

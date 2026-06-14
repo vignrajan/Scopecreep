@@ -82,6 +82,7 @@ export default async function ClientProjectPage({
                     <div>
                       <div className="flex items-center gap-2 font-medium">
                         <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        {o.co_number ? <span className="text-muted-foreground">#{o.co_number}</span> : null}
                         {o.title}
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground">{o.description}</p>

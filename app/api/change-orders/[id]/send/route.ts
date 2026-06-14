@@ -24,7 +24,7 @@ export async function POST(
     const { data: order, error } = await supabase
       .from("change_orders")
       .select(
-        "id, title, description, hours, rate, total, status, sign_token, project_id, projects(name, client_name, client_email)",
+        "id, co_number, title, description, hours, rate, total, status, sign_token, project_id, projects(name, client_name, client_email)",
       )
       .eq("id", id)
       .single();
@@ -87,6 +87,7 @@ export async function POST(
     const { subject, html } = changeOrderSentEmail({
       projectName: project.name,
       freelancerName: profile?.full_name || "Your freelancer",
+      number: order.co_number,
       title: order.title,
       description: order.description,
       hours: Number(order.hours),
