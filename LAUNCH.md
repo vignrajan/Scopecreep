@@ -56,6 +56,15 @@ Items are tagged **P0** (launch blocker — must ship before public launch), **P
 
 ---
 
+## User-flow spec alignment (from `scopelockuserflow.md`)
+- ✅ **Dollar value at the AI analysis step** — each out-of-scope/ambiguous
+  request now shows `~Xh × rate = $Y` and the value on the create button.
+- ✅ **CSV export** of approved (signed) change orders — per project and across
+  all projects (`/api/export/change-orders`), for end-of-project invoicing.
+- ✅ **Per-project change-order numbering** (CO #1, #2…) in the email subject,
+  card, ledger, sign page, and client page. Existing DBs: run
+  `supabase/migrations/0001_change_order_numbers.sql`.
+
 ## Phase 2 — Should-have, first week (P1)
 - ⬜ Loading skeletons (`loading.tsx`) for dashboard/project routes.
 - ⬜ Analytics + product events (Vercel Analytics / PostHog) — signups,

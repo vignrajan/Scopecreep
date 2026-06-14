@@ -35,6 +35,7 @@ function detailRow(label: string, value: string): string {
 export function changeOrderSentEmail(opts: {
   projectName: string;
   freelancerName: string;
+  number?: number | null;
   title: string;
   description: string;
   hours: number;
@@ -43,8 +44,9 @@ export function changeOrderSentEmail(opts: {
   currency: string;
   signUrl: string;
 }): { subject: string; html: string } {
+  const label = opts.number ? `Change Order #${opts.number}` : "Change order";
   const inner = `
-    <h1 style="margin:0 0 8px;font-size:20px;">New change order for ${opts.projectName}</h1>
+    <h1 style="margin:0 0 8px;font-size:20px;">${label} for ${opts.projectName}</h1>
     <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;">
       ${opts.freelancerName} has prepared a change order covering work outside the original project scope.
     </p>
@@ -58,7 +60,7 @@ export function changeOrderSentEmail(opts: {
       </table>
     </div>
     <div style="text-align:center;">${button(opts.signUrl, "Review and Sign")}</div>`;
-  return { subject: `Change order for ${opts.projectName} — review & sign`, html: shell(inner) };
+  return { subject: `${label} for ${opts.projectName} — review & sign`, html: shell(inner) };
 }
 
 /** 2. Client signed → notify freelancer. */

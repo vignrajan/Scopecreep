@@ -73,7 +73,12 @@ export function ChangeOrderCard({
       <CardContent className="space-y-4 p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="truncate font-semibold">{order.title}</h3>
+            <h3 className="truncate font-semibold">
+              {order.co_number ? (
+                <span className="mr-1.5 text-muted-foreground">#{order.co_number}</span>
+              ) : null}
+              {order.title}
+            </h3>
             <p className="line-clamp-2 text-sm text-muted-foreground">{order.description}</p>
           </div>
           <ChangeOrderStatusBadge status={order.status} />
@@ -116,6 +121,7 @@ export function ChangeOrderCard({
               <ChangeOrderPreview
                 projectName={projectName}
                 freelancerName={freelancerName}
+                number={order.co_number}
                 title={order.title}
                 description={order.description}
                 hours={Number(order.hours)}

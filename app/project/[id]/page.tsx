@@ -119,7 +119,10 @@ export default async function ProjectOverview({
             ) : (
               orderList.slice(0, 5).map((o) => (
                 <div key={o.id} className="flex items-center justify-between gap-3">
-                  <span className="truncate text-sm">{o.title}</span>
+                  <span className="truncate text-sm">
+                    {o.co_number ? <span className="text-muted-foreground">#{o.co_number} </span> : null}
+                    {o.title}
+                  </span>
                   <div className="flex shrink-0 items-center gap-2">
                     <span className="text-sm font-medium">
                       {formatCurrency(Number(o.total), currency)}

@@ -52,6 +52,7 @@ export interface ChangeOrder {
   id: string;
   project_id: string;
   request_id: string | null;
+  co_number: number | null;
   title: string;
   description: string;
   hours: number;

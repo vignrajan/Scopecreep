@@ -3,7 +3,9 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { ChangeOrderCard } from "@/components/change-orders/ChangeOrderCard";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Download } from "lucide-react";
 import { planConfig } from "@/lib/plans";
 import type { ChangeOrder, Plan, Project } from "@/types";
 
@@ -43,6 +45,7 @@ export default async function ChangeOrdersPage({
     .order("created_at", { ascending: false });
 
   const list = (orders ?? []) as ChangeOrder[];
+  const signedCount = list.filter((o) => o.status === "signed").length;
 
   return (
     <div className="space-y-6">
@@ -59,6 +62,19 @@ export default async function ChangeOrdersPage({
             </Link>
           </CardContent>
         </Card>
+      )}
+
+      {signedCount > 0 && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            {signedCount} approved change order{signedCount === 1 ? "" : "s"} ready to invoice.
+          </p>
+          <Button asChild variant="outline" size="sm" className="cursor-pointer">
+            <a href={`/api/export/change-orders?projectId=${id}`} download>
+              <Download className="h-4 w-4" /> Export CSV
+            </a>
+          </Button>
+        </div>
       )}
 
       {list.length === 0 ? (

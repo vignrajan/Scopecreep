@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { RequestAnalysisBadge } from "./RequestAnalysisBadge";
 import { ChangeOrderForm } from "@/components/change-orders/ChangeOrderForm";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatCurrency } from "@/lib/utils";
 import { setManualVerdict, markRequestStatus } from "@/app/actions/project";
 import type { ScopeRequest } from "@/types";
 
@@ -45,6 +45,13 @@ export function RequestItem({
     request.status === "pending" &&
     (request.ai_verdict === "out_of_scope" || request.ai_verdict === "ambiguous");
   const needsManual = !request.ai_verdict;
+
+  // Dollar value of the request = estimated extra hours × the freelancer's rate.
+  const extraHours = request.ai_estimated_hours ?? 0;
+  const dollarValue = extraHours * defaultRate;
+  const showDollar =
+    extraHours > 0 &&
+    (request.ai_verdict === "out_of_scope" || request.ai_verdict === "ambiguous");
 
   function classify(verdict: "in_scope" | "out_of_scope") {
     startTransition(async () => {
@@ -82,10 +89,18 @@ export function RequestItem({
         {request.ai_reasoning && (
           <p className="rounded-md bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
             {request.ai_reasoning}
-            {request.ai_verdict === "out_of_scope" &&
-              request.ai_estimated_hours != null &&
-              ` · ~${request.ai_estimated_hours}h extra`}
           </p>
+        )}
+
+        {showDollar && (
+          <div className="flex items-center justify-between rounded-md border border-primary/20 bg-primary/5 px-3 py-2">
+            <span className="text-sm text-muted-foreground">
+              ~{extraHours}h × {formatCurrency(defaultRate, currency)}/hr
+            </span>
+            <span className="text-base font-bold text-primary">
+              {formatCurrency(dollarValue, currency)}
+            </span>
+          </div>
         )}
 
         <div className="flex flex-wrap items-center gap-2">
@@ -110,7 +125,9 @@ export function RequestItem({
           {canCreateOrder && (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm">Create change order</Button>
+                <Button size="sm" className="cursor-pointer">
+                  Create change order{showDollar ? ` · ${formatCurrency(dollarValue, currency)}` : ""}
+                </Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
