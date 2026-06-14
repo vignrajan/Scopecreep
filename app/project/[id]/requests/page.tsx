@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { RequestInput } from "@/components/requests/RequestInput";
 import { RequestItem } from "@/components/requests/RequestItem";
+import { DemoAnalyzer } from "@/components/demo/DemoAnalyzer";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Project, ScopeRequest } from "@/types";
 
@@ -48,11 +49,13 @@ export default async function RequestsPage({
       <RequestInput projectId={id} />
 
       {list.length === 0 ? (
-        <Card>
-          <CardContent className="py-12 text-center text-sm text-muted-foreground">
-            No requests yet. Paste what your client asked for above and let ScopeLock classify it.
-          </CardContent>
-        </Card>
+        <div className="space-y-4">
+          <p className="text-center text-sm text-muted-foreground">
+            No requests yet. Paste what your client asked for above — or try the sample below to
+            see how it works.
+          </p>
+          <DemoAnalyzer variant="app" />
+        </div>
       ) : (
         <div className="space-y-4">
           {list.map((r) => (
